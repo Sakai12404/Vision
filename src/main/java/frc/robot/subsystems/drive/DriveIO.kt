@@ -1,0 +1,66 @@
+package frc.team449.subsystems.drive
+
+import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState
+import com.ctre.phoenix6.swerve.SwerveRequest
+import edu.wpi.first.math.Matrix
+import edu.wpi.first.math.geometry.Pose2d
+import edu.wpi.first.math.geometry.Rotation2d
+import edu.wpi.first.math.numbers.N1
+import edu.wpi.first.math.numbers.N3
+import org.littletonrobotics.junction.AutoLog
+
+fun interface DriveIO {
+    @AutoLog
+    open class DriveIOInputs : SwerveDriveState() {
+        init {
+            this.Pose = Pose2d()
+        }
+
+        @JvmField var gyroAngle: Double = 0.0
+
+        @JvmField var rollVelocityDegreesPerSecond: Double = 0.0
+
+        @JvmField var pitchVelocityDegreesPerSecond: Double = 0.0
+
+        @JvmField var yawVelocityDegreesPerSecond: Double = 0.0
+
+        @JvmField var frontLeftData: ModuleData = ModuleData()
+
+        @JvmField var frontRightData: ModuleData = ModuleData()
+
+        @JvmField var backLeftData: ModuleData = ModuleData()
+
+        @JvmField var backRightData: ModuleData = ModuleData()
+
+        fun fromSwerveDriveState(stateIn: SwerveDriveState) {
+            this.Pose = stateIn.Pose
+            this.SuccessfulDaqs = stateIn.SuccessfulDaqs
+            this.FailedDaqs = stateIn.FailedDaqs
+            this.ModuleStates = stateIn.ModuleStates
+            this.ModuleTargets = stateIn.ModuleTargets
+            this.ModulePositions = stateIn.ModulePositions
+            this.Speeds = stateIn.Speeds
+            this.OdometryPeriod = stateIn.OdometryPeriod
+        }
+    }
+
+    fun updateInputs(inputs: DriveIOInputs) {}
+
+    fun logModules(driveState: SwerveDriveState) {}
+
+    fun resetOdometry(pose: Pose2d) {}
+
+    fun setControl(request: SwerveRequest) {}
+
+    fun seedFieldCentric() {}
+
+    fun setOperatorPerspectiveForward(yaw: Rotation2d) {}
+
+    fun addVisionMeasurement(
+        estimatedPose: Pose2d,
+        timestamp: Double,
+        stdDevs: Matrix<N3, N1>,
+    )
+
+    fun setStateStdDevs(visionMeasurementStdDevs: Matrix<N3, N1>) {}
+}
